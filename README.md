@@ -1,0 +1,2 @@
+# nanodesu
+Kancolle iOS APP
