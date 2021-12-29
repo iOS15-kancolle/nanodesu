@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <script src="components/loader.js"></script>
+    <script src="jquery.js"></script>
+    <style>
+      .body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-image: url('kancolle.jpg'); 
+        background-position: 50% 50%; 
+      }
+
+@keyframes huerotator {
+  0% {
+    -webkit-filter: hue-rotate(0deg);
+    filter: hue-rotate(0deg);
+  }
+
+  100% {
+    -webkit-filter: hue-rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+      .main {
+        text-align: center;
+        background: rgba(211,211,211,0.7);
+        position: absolute;
+        top: 50%; 
+        left: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        -webkit-transform: translateY(-50%) translateX(-50%);
+        }
+      .btn {
+        color: #fff;
+        background: linear-gradient(to bottom, #a6d900 0%, #ff4454 100%);
+        animation: huerotator 3s infinite alternate;
+        text-decoration: none;
+        border-radius: 100vh;
+      }
+    </style>
+</head>
+<body>
+  <script>
+      var ready = false;
+      document.addEventListener("deviceready", onDeviceReady, false);
+      function onDeviceReady() {
+        ready = true;
+        var next10 = localStorage.getItem('next10');
+        if(next10 === null){
+          localStorage.setItem('next10', -1);
+        }else if(next10 != -1){
+          localStorage.setItem('next10', parseInt(next10)+1);
+          if(next10 >= 10){
+            localStorage.setItem('next10',-1);
+          }
+          //console.log(next10);
+          var ref = cordova.InAppBrowser.open('https://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/', '_blank', 'location=no,presentationstyle=fullscreen,toolbar=no');
+          ref.addEventListener('loadstop', function() {
+            $.get("kancolle.js", function(data) {
+              ref.executeScript({code: data});
+            });
+          });
+        }
+      }
+
+      function openSesame(){
+        if(!ready) alert("只今ライブラリを読み込んでおります。数秒後にもう一度お試しください。");
+        let element = document.getElementById('next10');
+        if(element.checked){
+          localStorage.setItem('next10', 0);
+        }else{
+          localStorage.setItem('next10', -1);
+        }
+        var ref = cordova.InAppBrowser.open('https://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/', '_blank', 'location=no,presentationstyle=fullscreen,toolbar=no');
+        ref.addEventListener('loadstop', function() {
+          $.get("kancolle.js", function(data) {
+            ref.executeScript({code: data});
+          });
+        });
+      }
+  </script>
+  <div class="body">
+  <div class="main"> 
+  <h3>!すでのな<img width="24px" height="24px" src="icon.jpg" alt="!sudenona-icon"></h3>
+  <h4>naayu1012提督が生み出したAPPなのです！</h4>
+  <p>iOS15で艦これができない問題を解決するため作成しました。</p>
+  <p>iOS14以下の方はSafariよりプレイすることをお勧めします。</p>
+  <p>※このアプリは「iOS15で艦これをやるためのブックマークレット改」を使用しています。</p>
+  <p>・アイテム購入はできません。</p>
+  <p>・全画面表示でプレイすることはできません。</p>
+  <p>次の起動から10回の間この画面を表示しない:<input type="checkbox" id="next10" checked></p>
+  <p>Twitter: <a href="https://twitter.com/naayu1012">@naayu1012</a> Discord: yussy#5373</p>
+  <a class="btn" href=" javascript:openSesame();">プレイ開始！</a>
+  </div>
+  </div>
+</body>
+</html>
